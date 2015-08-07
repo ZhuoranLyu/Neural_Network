@@ -349,13 +349,18 @@ int main(int argc, char *argv[])
   size_t global_size[] = {n, k };
 
 
-
+  timestamp_type time1, time2;
+  double elapsed;
   int h;
+  get_timestamp(&time1);
   for(h = 0; h < 100; h++){
     local_size[0] = 4;
     local_size[1] = 4;
     global_size[0] = ceil(n/local_size[0]) * local_size[0];
     global_size[1] = ceil(k/local_size[1]) * local_size[1];
+
+//    global_size[0] = n;
+//    global_size[1] = k;   
 
 
     CALL_CL_SAFE(clSetKernelArg(knl1, 0, sizeof(d_X), &d_X));
@@ -481,16 +486,14 @@ int main(int argc, char *argv[])
     CALL_CL_SAFE(clSetKernelArg(knl6, 1, sizeof(d_W1), &d_W1));
     CALL_CL_SAFE(clSetKernelArg(knl6, 2, sizeof(WW1), &WW1));
 
-//    CALL_CL_SAFE(clFinish(queue));
+    CALL_CL_SAFE(clFinish(queue));
     CALL_CL_SAFE(clEnqueueNDRangeKernel(queue, knl6, 2, NULL,
             global_size, local_size, 0, NULL, NULL));
 
-//    CALL_CL_SAFE(clFinish(queue));
+    CALL_CL_SAFE(clFinish(queue));
 
     local_size[0] = 1;
     local_size[1] = 1;
-
-
     global_size[0] = k;
     global_size[1] = 1;
 
@@ -505,7 +508,9 @@ int main(int argc, char *argv[])
 //    CALL_CL_SAFE(clFinish(queue));
 
   }
-   
+  get_timestamp(&time2);
+  elapsed = timestamp_diff_in_seconds(time1,time2);
+  printf("Time consumed : %f\n", elapsed);   
 
   CALL_CL_SAFE(clReleaseMemObject(d_X));
   CALL_CL_SAFE(clReleaseMemObject(d_W1));
