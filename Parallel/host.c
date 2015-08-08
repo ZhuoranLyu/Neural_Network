@@ -371,11 +371,20 @@ int main(int argc, char *argv[])
     CALL_CL_SAFE(clSetKernelArg(knl1, 5, sizeof(wX), &wX));
     CALL_CL_SAFE(clSetKernelArg(knl1, 6, sizeof(hX), &hX));
 
+
+
 //    CALL_CL_SAFE(clFinish(queue));
     CALL_CL_SAFE(clEnqueueNDRangeKernel(queue, knl1, 2, NULL,
           global_size, local_size, 0, NULL, NULL));
 
 //    CALL_CL_SAFE(clFinish(queue));
+
+/*    CALL_CL_SAFE(clEnqueueReadBuffer(
+          queue, d_z2,  CL_TRUE,  0,
+          mem_size_z2, h_z2,
+          0, NULL, NULL));
+
+printf("z2 is %f\n", h_z2[0]);*/
 
     local_size[0] = 1;
     local_size[1] = 1;
@@ -399,6 +408,7 @@ int main(int argc, char *argv[])
           queue, d_yHat,  CL_TRUE,  0,
           mem_size_yHat, h_yHat,
           0, NULL, NULL));
+
 
   // compute cost
     float J = 0;

@@ -122,7 +122,8 @@ kernel void array_trans_dot(
       global float* c,
       global float* d,
       const int k,
-      const int m)
+      const int m,
+      const int n)
 {
   int x, y, i;
   x = get_global_id(0);
