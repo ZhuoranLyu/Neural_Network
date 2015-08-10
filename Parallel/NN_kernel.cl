@@ -32,7 +32,7 @@ kernel void array_dot(
 }
 
 /*a is m*n, b is m*k, c is n*k */
-/*kernel void trans_dot(
+kernel void trans_dot(
       global float* a,
       global float* b,
       global float* c,
@@ -49,9 +49,9 @@ kernel void array_dot(
   }
   c[x * k + y] = val;
   return;
-}*/
+}
 
-kernel void trans_dot(
+/*kernel void trans_dot(
       global float* a,
       global float* b,
       global float* c,
@@ -95,7 +95,7 @@ kernel void trans_dot(
   if(globalRow < n && globalCol < k){
     c[globalRow * k + globalCol] = temp;
   }
-}
+}*/
 
 /*a is n*k, b is n*1, c is k*1 */
 kernel void array_trans_dot(
@@ -116,7 +116,7 @@ kernel void array_trans_dot(
 }
 
 /*a is n*m, b is m*k, c is n*k, d is n*k */
-/*kernel void forward1(
+kernel void forward1(
       global float* a,
       global float* b,
       global float* c,
@@ -132,16 +132,12 @@ kernel void array_trans_dot(
   for(i = 0; i < m; i++){
     val += a[x * m + i] * b[i * k + y];
   }
-  if(x == 0 && y == 0){
-    c[x * k + y] = val;
-  }else{
   c[x * k + y] = val;
-  }
   d[x * k + y] = 1 / (1 + exp(-val));
   return;
-}*/
+}
 
-kernel void forward1(
+/*kernel void forward1(
       global float* a,
       global float* b,
       global float* c,
@@ -185,7 +181,7 @@ kernel void forward1(
     d[globalRow * k + globalCol] = 1 / (1 + exp(-temp));
   }
   return;
-}
+}*/
 
 /* a is n*k, y is k*1, c is n*1, d is n*1 */
 kernel void forward2(
