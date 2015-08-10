@@ -64,8 +64,8 @@ kernel void trans_dot(
   int globalRow = TS * get_group_id(0) + row;
   int globalCol = TS * get_group_id(1) + col;
 
-  __local Asub[TS][TS];
-  __local Bsub[TS][TS];
+  __local float Asub[TS][TS];
+  __local float Bsub[TS][TS];
 
   float temp = 0.0;
   int numTiles = (m - 1) / TS + 1;
@@ -227,7 +227,7 @@ kernel void back1(
    I assume there are n*k work items
  */
 kernel void back2(
-      global float* b,
+	global float* b,
       global float* c,
       global float* d,
       global float* e,

@@ -372,12 +372,9 @@ int main(int argc, char *argv[])
     CALL_CL_SAFE(clSetKernelArg(knl1, 6, sizeof(hX), &hX));
 
 
-
-//    CALL_CL_SAFE(clFinish(queue));
     CALL_CL_SAFE(clEnqueueNDRangeKernel(queue, knl1, 2, NULL,
           global_size, local_size, 0, NULL, NULL));
 
-//    CALL_CL_SAFE(clFinish(queue));
 
 /*    CALL_CL_SAFE(clEnqueueReadBuffer(
           queue, d_z2,  CL_TRUE,  0,
@@ -398,10 +395,8 @@ printf("z2 is %f\n", h_z2[0]);*/
     CALL_CL_SAFE(clSetKernelArg(knl2, 4, sizeof(wa2), &wa2));
 
 
-//    CALL_CL_SAFE(clFinish(queue));
     CALL_CL_SAFE(clEnqueueNDRangeKernel(queue, knl2, 2, NULL,
           global_size, local_size, 0, NULL, NULL));
-//    CALL_CL_SAFE(clFinish(queue));
  
 
     CALL_CL_SAFE(clEnqueueReadBuffer(
@@ -426,11 +421,9 @@ printf("z2 is %f\n", h_z2[0]);*/
     CALL_CL_SAFE(clSetKernelArg(knl3, 2, sizeof(d_z3), &d_z3));
     CALL_CL_SAFE(clSetKernelArg(knl3, 3, sizeof(d_delta3), &d_delta3));
 
-//    CALL_CL_SAFE(clFinish(queue));
     CALL_CL_SAFE(clEnqueueNDRangeKernel(queue, knl3, 2, NULL,
           global_size, local_size, 0, NULL, NULL));
 
-//    CALL_CL_SAFE(clFinish(queue));
 
 
 
@@ -444,11 +437,9 @@ printf("z2 is %f\n", h_z2[0]);*/
     CALL_CL_SAFE(clSetKernelArg(knl7, 4, sizeof(wa2), &wa2));
 
 
-//    CALL_CL_SAFE(clFinish(queue));
     CALL_CL_SAFE(clEnqueueNDRangeKernel(queue, knl7, 2, NULL,
           global_size, local_size, 0, NULL, NULL));
 
-//    CALL_CL_SAFE(clFinish(queue));
 
 
     global_size[0] = n;
@@ -463,11 +454,9 @@ printf("z2 is %f\n", h_z2[0]);*/
 
 
 
-//    CALL_CL_SAFE(clFinish(queue));
     CALL_CL_SAFE(clEnqueueNDRangeKernel(queue, knl4, 2, NULL,
           global_size, local_size, 0, NULL, NULL));
 
-//    CALL_CL_SAFE(clFinish(queue));
 
     local_size[0] = 4;
     local_size[1] = 4;
@@ -486,11 +475,9 @@ printf("z2 is %f\n", h_z2[0]);*/
 
 
 
-//    CALL_CL_SAFE(clFinish(queue));
     CALL_CL_SAFE(clEnqueueNDRangeKernel(queue, knl5, 2, NULL,
           global_size, local_size, 0, NULL, NULL));
 
-//    CALL_CL_SAFE(clFinish(queue));
 
     CALL_CL_SAFE(clSetKernelArg(knl6, 0, sizeof(d_dJdW1), &d_dJdW1));
     CALL_CL_SAFE(clSetKernelArg(knl6, 1, sizeof(d_W1), &d_W1));
@@ -511,11 +498,9 @@ printf("z2 is %f\n", h_z2[0]);*/
     CALL_CL_SAFE(clSetKernelArg(knl6, 1, sizeof(d_W2), &d_W2));
     CALL_CL_SAFE(clSetKernelArg(knl6, 2, sizeof(WW2), &WW2));
 
-//    CALL_CL_SAFE(clFinish(queue));
     CALL_CL_SAFE(clEnqueueNDRangeKernel(queue, knl6, 2, NULL,
             global_size, local_size, 0, NULL, NULL));
 
-//    CALL_CL_SAFE(clFinish(queue));
 
   }
   get_timestamp(&time2);
