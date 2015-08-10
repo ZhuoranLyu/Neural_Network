@@ -353,7 +353,7 @@ int main(int argc, char *argv[])
   double elapsed;
   int h;
   get_timestamp(&time1);
-  for(h = 0; h < 100; h++){
+  for(h = 0; h < 5000; h++){
     local_size[0] = 4;
     local_size[1] = 4;
     global_size[0] = ceil(n/local_size[0]) * local_size[0];
@@ -399,18 +399,7 @@ printf("z2 is %f\n", h_z2[0]);*/
           global_size, local_size, 0, NULL, NULL));
  
 
-    CALL_CL_SAFE(clEnqueueReadBuffer(
-          queue, d_yHat,  CL_TRUE,  0,
-          mem_size_yHat, h_yHat,
-          0, NULL, NULL));
 
-
-  // compute cost
-    float J = 0;
-    for (i = 0; i < n; i++){
-      J += (h_y[i]- h_yHat[i]) * (h_y[i]- h_yHat[i]);
-    }
-    printf("Cost is %f\n", 0.5*J);
 
 
     global_size[0] = n;
@@ -505,7 +494,20 @@ printf("z2 is %f\n", h_z2[0]);*/
   }
   get_timestamp(&time2);
   elapsed = timestamp_diff_in_seconds(time1,time2);
-  printf("Time consumed : %f\n", elapsed);   
+  printf("Time consumed : %f\n", elapsed);  
+
+  CALL_CL_SAFE(clEnqueueReadBuffer(
+      queue, d_yHat,  CL_TRUE,  0,
+      mem_size_yHat, h_yHat,
+      0, NULL, NULL));
+
+
+  // compute cost
+  float J = 0;
+  for (i = 0; i < n; i++){
+    J += (h_y[i]- h_yHat[i]) * (h_y[i]- h_yHat[i]);
+  }
+  printf("Cost is %f\n", 0.5*J);
 
   CALL_CL_SAFE(clReleaseMemObject(d_X));
   CALL_CL_SAFE(clReleaseMemObject(d_W1));
@@ -514,5 +516,15 @@ printf("z2 is %f\n", h_z2[0]);*/
   CALL_CL_SAFE(clReleaseKernel(knl1));
   CALL_CL_SAFE(clReleaseCommandQueue(queue));
   CALL_CL_SAFE(clReleaseContext(ctx));
+  free(h_W1);
+  free(h_z2);
+  free(h_a2);
+  free(h_W2);
+  free(h_z3);
+  free(h_yHat);
+  free(h_delta3);
+  free(h_delta2);
+  free(h_dJdW2);
+  free(h_dJdW1);
 }
 //gcc -o NN n_host.c cl-helper.c helper.c -framework OpenCL -lm
