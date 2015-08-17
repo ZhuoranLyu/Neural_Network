@@ -12,8 +12,6 @@
 #include "forwardProp.h"
 #include "backProp.h"
 
-//#include "dataReader.h"
-
 float max(float a, float b){
 	return a > b ? a : b;
 }
@@ -117,12 +115,11 @@ int main(int argc, char **argv){
 		for (j = 0; j < m; j++){
 			X[i][j] = (X[i][j] - Min[j]) / (Max[j] - Min[j]);
 			X[i][j] -= 0.5;
-			//X[i][j] /= 100;
+			X[i][j] /= 100;
 		}
 		y[i] /= 100;
-	//	printf("\n");
 	}
-	
+
 	float J = 10.; // cost
 	float** W1; // weight matrix, m by k
 	float* W2; // weight matrix, k by 1
@@ -152,20 +149,19 @@ int main(int argc, char **argv){
 
 	for (i = 0; i< m; i++){
 		for (j = 0; j < k; j++){
-			W1[i][j] = 1.;//+ 1. / (1. + i * k + j);//((float)rand() / RAND_MAX);
+			W1[i][j] = 1.;
 			deltaW1[i][j] = 0.;
 		}
 	}
 
 	for (j = 0; j < k; j++){
-		W2[j] = 1.;// + 1./(1. + j);//((float)rand() / RAND_MAX);
+		W2[j] = 1.;
 		deltaW2[j] = 0.;
 	}
     z2 = calloc(n, sizeof(float*));
 	for(i = 0; i < n; i++){
 		z2[i] =calloc(k, sizeof(float));
 	}
-	//z2[0] = 1.;
 	a2 = calloc(n, sizeof(float *));
 	for(i = 0; i < n; i++){
 		a2[i] = calloc(k, sizeof(float));
@@ -189,125 +185,47 @@ int main(int argc, char **argv){
 	}
 	float* temp = calloc(n, sizeof(float)); // store temp value for y
 
-	step = 0.1;
+	step = 0.01;
 	timestamp_type time1, time2;
     get_timestamp(&time1);
 
-	for (p = 0; p < 50; p++){
+	for (p = 0; p < 5000; p++){
 		float sum = 0;
 		for (i = 0; i < n; i++){
 			for (j = 0; j < m; j++){
 				sum += X[i][j];
 			}
 		}
-		printf("Sum of X is %.15f, ", sum);
 
 		forward1(z2, X, W1, n, m, k); // n by k
-		
-		printf("%d\n", n);
-		sum = 0;
-		for (i = 0; i < m; i++){
-			for (j = 0; j < k; j++){
-				sum += W1[i][j];
-				printf("%.15f, ", W1[i][j]);
-			}
-		}
-		printf("Sum of W1 is \n");
-
-		printf("%.15f, ", sum);
-		
-		printf("z2 is \n");
-		for (i = 0; i < n; i++){
-			for (j = 0; j < k; j++){
-				printf("%.15f, ", z2[i][j]);
-			}
-		}
-		/*
-		sum = 0;
-		for (i = 0; i < n; i++){
-			for (j = 0; j < k; j++){
-				sum += z2[i][j];
-				printf("%.15f, ", z2[i][j]);
-			}
-		}
-		printf("\nSum of z2 is \n");
-		printf("%.15f, ", sum);
-		*/
+	
 		sigForward1(a2, z2, n, k); // n by k
-		/*
-		printf("a2 is \n");
-		for (j = 0; j < 50; j++){
-			printf("%.15f, ", a2[0][j]);
-		}
-		*/
-
+		
 		forward2(z3, a2, W2, n, k); // n by 1
-		/*
-		printf("z3 is \n");
-		for (j = 0; j < 10; j++){
-			printf("%.15f, ", z3[j]);
-		}
-		*/
+		
 		sum = 0;
-		printf("z3 is \n");
+
 		for (j = 0; j < n; j++){
 			sum += z3[j];
 		}
-		printf("%.15f, ", sum);
+
 		sigForward2(yHat, z3, n); // n by 1
 
-		J = costFunction(yHat, y, n);
-		printf("cost is %f\n", J);
 		costFunctionPrime(delta3, delta2, temp, dJdW1, dJdW2, yHat, y, z2, z3, a2, W1, W2, X, n, k, m);
 		
-		
-		
-		/*
-		printf("delta3 is \n");
-		for (j = 0; j < 50; j++){
-			printf("%.15f, ",delta3[j]);
-		}
-		
-		//printf("X is \n");
-		for (j = 0; j < 50; j++){
-			//printf("%f, ",X[0][j]);
-		}
-
-		/*
-		printf("delta2 is \n");
-		for (j = 0; j < 50; j++){
-			printf("%.20f, ",delta2[0][j]);
-		}
-				printf("dJdW2 is \n");
-		for (j = 0; j < 50; j++){
-			printf("%.20f, ",dJdW2[j]);
-		}
-		*/
-
-		//printf("dJdW1\n");
 		for (i = 0; i < m; i++){
 			for (j = 0; j < k; j++){
-				//printf("%.15f, ", dJdW1[i][j]);
-				//deltaW[i][j] = - step * dJdW[i][j];// + 0.9 * deltaW[i][j];
 				W1[i][j] -= step * dJdW1[i][j];
 			}
-			//printf("\n");
 		}
 
-
-printf("\n");
 		for (j = 0; j < k; j++){
-			//deltaW[i][j] = - step * dJdW[i][j];// + 0.9 * deltaW[i][j];
 			W2[j] -= step * dJdW2[j];
-			//printf("%f, ", dJdW2[j]);
 		}
 		sum = 0;
 		for (i = 0; i < k; i++){
 			sum += W2[i];
 		}
-		printf("\nSum of W2 is \n");
-		printf("%.15f, ", sum);
-		//printf("%dth iter.\n", p);
 	}
 	get_timestamp(&time2);
 
