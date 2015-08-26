@@ -1,4 +1,6 @@
 #include "forwardProp.h"
+#include <math.h>
+#include <stdio.h>
 
 
 float sigmoidPrime(float x){
