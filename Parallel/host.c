@@ -1,8 +1,4 @@
-/* Convolution example; originally written by Lucas Wilcox.
- * Minor modifications by Georg Stadler.
- * The function expects a bitmap image (*.ppm) as input, as
- * well as a number of blurring loops to be performed.
- */
+/*Parallel Neural Network*/
 
 #include <fcntl.h>
 #include <stdio.h>
@@ -353,13 +349,13 @@ int main(int argc, char *argv[])
   int h;
   get_timestamp(&time1);
   for(h = 0; h < 5000; h++){
-//    local_size[0] = 4;
-//    local_size[1] = 4;
-//    global_size[0] = ceil(n/local_size[0]) * local_size[0];
-//    global_size[1] = ceil(k/local_size[1]) * local_size[1];
+    local_size[0] = 4;
+    local_size[1] = 4;
+    global_size[0] = ceil(n/local_size[0]) * local_size[0];
+    global_size[1] = ceil(k/local_size[1]) * local_size[1];
 
-    global_size[0] = n;
-    global_size[1] = k;   
+//    global_size[0] = n;
+//    global_size[1] = k;   
 
 
     CALL_CL_SAFE(clSetKernelArg(knl1, 0, sizeof(d_X), &d_X));
@@ -446,13 +442,13 @@ printf("z2 is %f\n", h_z2[0]);*/
           global_size, local_size, 0, NULL, NULL));
 
 
-//    local_size[0] = 4;
-//    local_size[1] = 4;
-//    global_size[0] = ceil(m/local_size[0]) * local_size[0];
-//    global_size[1] = ceil(k/local_size[1]) * local_size[1];
+    local_size[0] = 4;
+    local_size[1] = 4;
+    global_size[0] = ceil(m/local_size[0]) * local_size[0];
+    global_size[1] = ceil(k/local_size[1]) * local_size[1];
 
-    global_size[0] = m;
-    global_size[1] = k;
+//    global_size[0] = m;
+//    global_size[1] = k;
 
     CALL_CL_SAFE(clSetKernelArg(knl5, 0, sizeof(d_X), &d_X));
     CALL_CL_SAFE(clSetKernelArg(knl5, 1, sizeof(d_delta2), &d_delta2));
